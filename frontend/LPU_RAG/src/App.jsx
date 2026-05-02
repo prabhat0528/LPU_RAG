@@ -12,7 +12,7 @@ function App() {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const res = await axios.post("http://127.0.0.1:5000/ask", {
+      const res = await axios.post("https://lpu-rag-backend.onrender.com", {
         query: query,
       });
       setQuery("")
