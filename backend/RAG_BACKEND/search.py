@@ -1,42 +1,34 @@
 import os
-from langchain_community.document_loaders import RecursiveUrlLoader
+from dotenv import load_dotenv
+
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
-from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 
-
+# Load env variables
+load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 
+# ----------- LOAD PDF -----------
+pdf_loader = PyPDFLoader("Lovely Professional University.pdf")
+docs = pdf_loader.load()
 
-url = "https://www.lpu.in/"
-
-loader = RecursiveUrlLoader(
-    url=url,
-    max_depth=2,
-    extractor=lambda x: BeautifulSoup(x, "html.parser").get_text(),
-    timeout=100,
-    continue_on_failure=True  
-)
-
-docs = loader.load()
-
-# Spliting into chunks
+# ----------- SPLITTING -----------
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
-    chunk_overlap=200
+    chunk_size=100,
+    chunk_overlap=50
 )
 
 chunks = splitter.split_documents(docs)
 
-# Embeddings
+# ----------- EMBEDDINGS -----------
 embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/embedding-001",
-    google_api_key = api_key
+    model="gemini-embedding-001",
+    google_api_key=api_key
 )
 
-# Store in Chroma
+# ----------- VECTOR STORE -----------
 db = Chroma.from_documents(
     chunks,
     embedding=embeddings,
@@ -45,4 +37,4 @@ db = Chroma.from_documents(
 
 db.persist()
 
-print("Ingestion Complete")
+print(f"Ingestion Complete | Total Chunks: {len(chunks)}")

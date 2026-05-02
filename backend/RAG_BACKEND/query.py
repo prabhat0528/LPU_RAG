@@ -1,19 +1,21 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+from langchain_community.vectorstores import Chroma
+from langchain_classic.chains import RetrievalQA
+from langchain_core.prompts import PromptTemplate
 
 import os
 from dotenv import load_dotenv
 api_key = os.getenv("GEMINI_API_KEY")
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Load embeddings
 embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/gemini-embedding-001",
+    model="gemini-embedding-001",
     google_api_key=api_key
 )
 
