@@ -12,7 +12,7 @@ function App() {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const res = await axios.post("https://lpu-rag-backend.onrender.com", {
+      const res = await axios.post("https://lpu-rag-backend.onrender.com/ask", {
         query: query,
       });
       setQuery("")

@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 api_key = os.getenv("GEMINI_API_KEY")
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://lpu-rag-backend.onrender.com"}})
+CORS(app, resources={r"/*": {"origins": "https://lpu-rag.onrender.com"}})
 
 # Load embeddings
 embeddings = GoogleGenerativeAIEmbeddings(
